@@ -6,12 +6,10 @@ import {ERC721Upgradeable} from "@oz-up/contracts/token/ERC721/ERC721Upgradeable
 import {LeverageLogic} from "./LeverageLogic.sol";
 
 contract LeverageNFT is ERC721Upgradeable, LeverageLogic {
-
     address factory;
 
     function initialize(address to) public initializer {
         factory = msg.sender;
         _mint(to, 1);
     }
-
 }

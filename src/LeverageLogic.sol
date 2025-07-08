@@ -1,7 +1,6 @@
 pragma solidity 0.8.30;
 
 abstract contract LeverageLogic {
-
     // NOTE: May not need any state variables
     enum LeverageType {
         MORPHO,
@@ -14,7 +13,11 @@ abstract contract LeverageLogic {
         uint256 value;
     }
 
-    function _decodeLeverageType(bytes memory data, LeverageType leverageType) internal pure returns (CallData memory) {
+    function _decodeLeverageType(bytes memory data, LeverageType leverageType)
+        internal
+        pure
+        returns (CallData memory)
+    {
         if (leverageType == LeverageType.MORPHO) {
             // TODO: This may be different based on uses
             return abi.decode(data, (CallData));
@@ -28,5 +31,4 @@ abstract contract LeverageLogic {
         (bool success, bytes memory returnData) = callData.target.call{value: callData.value}(callData.data);
         require(success, "Leverage failed");
     }
-
 }
