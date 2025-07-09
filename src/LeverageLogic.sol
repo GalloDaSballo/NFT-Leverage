@@ -1,6 +1,38 @@
 pragma solidity 0.8.30;
 
-abstract contract LeverageLogic {
+import {AddressLib} from "./AddressLib.sol";
+import {OwnershipNFT} from "./OwnershipNFT.sol";
+
+contract LeverageLogic {
+    address immutable factory;
+
+    mapping(address => bool) public authorized;
+
+    constructor() {
+        factory = msg.sender;
+    }
+    
+    modifier isOwner() {
+        uint256 tokenId = AddressLib._fromAddressToTokenId(address(this));
+        require(OwnershipNFT(factory).ownerOf(tokenId) == msg.sender, "Not owner");
+        _;
+    }
+
+    /// === PERMISSIONS === ///
+
+    modifier isAuthorized() {
+        require(authorized[msg.sender], "Not authorized");
+        _;
+    }
+
+    function authorize(address user, bool auth) external isOwner {
+        authorized[user] = auth;
+    }
+
+
+
+    /// === LEVERAGE LOGIC ===
+
     // NOTE: May not need any state variables
     enum LeverageType {
         MORPHO,
